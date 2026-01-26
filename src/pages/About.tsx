@@ -9,7 +9,7 @@ export default function About() {
       
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <section className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">About Hobby Haven</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">About Capsule Corp</h1>
           <p className="text-xl text-gray-600">Your local destination for all things hobby-related</p>
         </section>
 

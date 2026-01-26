@@ -5,8 +5,8 @@ import Footer from '../components/Footer';
 import { CartItem } from '../types/product';
 import { cartService } from '../utils/cart';
 
-// Replace with your WhatsApp number
-const WHATSAPP_NUMBER = 'YOUR_WHATSAPP_NUMBER_HERE'; // Format: 1234567890 (no + or spaces)
+// WhatsApp number set by owner (no plus sign or spaces). Example: countrycode + number -> 573236796356
+const WHATSAPP_NUMBER = '573236796356'; // +57 3236796356
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);

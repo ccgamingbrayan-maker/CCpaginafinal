@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, Menu, X, Store } from 'lucide-react';
+import { ShoppingCart, Menu, X } from 'lucide-react';
 import { cartService } from '../utils/cart';
 
 const Header = () => {
@@ -24,8 +24,12 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link to="/" className="flex items-center space-x-2">
-            <Store className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold text-primary">Hobby Haven</span>
+            <img
+              src="https://static.wikia.nocookie.net/dragonball/images/a/a0/Logo_de_Capsule_Corp.png/revision/latest?cb=20220526210226&path-prefix=es"
+              alt="Capsule Corp"
+              className="h-8 w-8 object-contain"
+            />
+            <span className="text-xl font-bold text-primary">Capsule Corp</span>
           </Link>
 
           <nav className="hidden md:flex space-x-8">

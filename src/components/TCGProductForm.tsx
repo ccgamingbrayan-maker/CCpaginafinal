@@ -41,6 +41,12 @@ const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) =
       return;
     }
 
+    // If selected category doesn't provide an endpoint (coming soon), skip search
+    if (!selectedCategory || !selectedCategory.endpoint) {
+      setSearchResults([]);
+      return;
+    }
+
     const timeoutId = setTimeout(async () => {
       setIsSearching(true);
       try {
@@ -52,16 +58,16 @@ const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) =
         
         if (response.ok) {
           const data = await response.json();
-          // Filter results based on search query
-          const filtered = data.filter((card: any) => 
-            card.name?.toLowerCase().includes(searchQuery.toLowerCase())
-          ).slice(0, 10);
+          // Filter results based on search query (case-insensitive)
+          const filtered = (Array.isArray(data) ? data : [])
+            .filter((card: any) => card.name?.toLowerCase().includes(searchQuery.toLowerCase()))
+            .slice(0, 10);
           
           setSearchResults(filtered.map((card: any) => ({
-            id: card.id || card.uuid,
+            id: card.id || card.uuid || card._id || `${card.name}-${Math.random()}`,
             name: card.name,
-            image: card.image || card.images?.[0],
-            description: card.description || card.desc
+            image: card.image || card.images?.[0] || card.imageUrl || '',
+            description: card.description || card.desc || ''
           })));
         } else {
           toast.error('Failed to search cards');
@@ -110,9 +116,12 @@ const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) =
             value={selectedCategory.name}
             onChange={(e) => {
               const category = tcgApiCategories.find(cat => cat.name === e.target.value);
-              if (category) setSelectedCategory(category);
-              setSearchResults([]);
-              setSelectedCard(null);
+              if (category) {
+                setSelectedCategory(category);
+                setSearchResults([]);
+                setSelectedCard(null);
+                setSearchQuery('');
+              }
             }}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
           >
@@ -122,6 +131,9 @@ const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) =
               </option>
             ))}
           </select>
+          {selectedCategory && !selectedCategory.endpoint && (
+            <p className="text-sm text-gray-500 mt-2">This category is coming soon and cannot be searched yet.</p>
+          )}
         </div>
 
         <div>
@@ -137,6 +149,7 @@ const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) =
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               placeholder="Type to search cards..."
+              disabled={!selectedCategory || !selectedCategory.endpoint}
             />
           </div>
           {isSearching && (
