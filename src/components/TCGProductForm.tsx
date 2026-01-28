@@ -14,7 +14,7 @@ const tcgProductSchema = z.object({
 type TCGProductFormData = z.infer<typeof tcgProductSchema>;
 
 interface TCGProductFormProps {
-  onSubmit: (data: { name: string; image: string; price: number; desc: string; category: string }) => void;
+  onSubmit: (data: { name: string; image_url: string; price: number; description: string; category: string }) => void;
   onCancel: () => void;
 }
 
@@ -48,8 +48,10 @@ const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) =
 
     const timeoutId = setTimeout(async () => {
       setIsSearching(true);
+
+      const finalEndpoint = selectedCategory.endpoint + encodeURIComponent(searchQuery);
       try {
-        const response = await fetch(selectedCategory.endpoint, {
+        const response = await fetch(finalEndpoint, {
           headers: {
             'x-api-key': '79ad473ec4732427d64f7090dce2ced8e387d84850af8ba6c2544c4d369414c1'
           }
@@ -57,15 +59,14 @@ const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) =
         
         if (response.ok) {
           const data = await response.json();
+
+          console.log('TCG API Search Data:', data);
           // Filter results based on search query (case-insensitive)
-          const filtered = (Array.isArray(data) ? data : [])
-            .filter((card: any) => card.name?.toLowerCase().includes(searchQuery.toLowerCase()))
-            .slice(0, 10);
           
-          setSearchResults(filtered.map((card: any) => ({
+          setSearchResults(data.data.map((card: any) => ({
             id: card.id || card.uuid || card._id || `${card.name}-${Math.random()}`,
             name: card.name,
-            image: card.image || card.images?.[0] || card.imageUrl || '',
+            image: card.image || card.images?.[0] || card.imageUrl || card.images?.small || '',
             description: card.description || card.desc || ''
           })));
         } else {
@@ -90,9 +91,9 @@ const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) =
     try {
       await onSubmit({
         name: selectedCard.name,
-        image: selectedCard.image,
+        image_url: selectedCard.image,
         price: data.price,
-        desc: data.desc || selectedCard.description || '',
+        description: data.desc || selectedCard.description || '',
         category: selectedCategory.name
       });
       toast.success('Product added successfully!');
