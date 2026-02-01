@@ -1,4 +1,3 @@
-// App.tsx
 import React from 'react';
 import '@radix-ui/themes/styles.css';
 import { Theme } from '@radix-ui/themes';
@@ -7,12 +6,13 @@ import 'react-toastify/dist/ReactToastify.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Landing from './src/pages/Landing';
-import Products from './src/pages/Products';
 import About from './src/pages/About';
 import Contact from './src/pages/Contact';
 import Cart from './src/pages/Cart';
 import Admin from './src/pages/Admin';
 import NotFound from './src/pages/NotFound';
+import Products from './src/pages/Products';
+
 
 const App: React.FC = () => {
   return (
@@ -20,7 +20,7 @@ const App: React.FC = () => {
       <Router>
         <Routes>
           <Route path="/" element={<Landing />} />
-          <Route path="/products" element={<Products />} />
+          <Route path="/products" element={<Products />} /> {/* Misma página */}
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/cart" element={<Cart />} />

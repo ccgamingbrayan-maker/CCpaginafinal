@@ -7,7 +7,7 @@ import ProductCard from '../components/ProductCard';
 import ProductFilters from '../components/ProductFilters';
 import LoginModal from '../components/LoginModal';
 import type { Product } from '../types/product';
-import { mockProducts } from '../utils/supabase';
+import { productService } from '../utils/supabase';
 
 const Products: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -19,7 +19,7 @@ const Products: React.FC = () => {
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const data = mockProducts.filter(product => !product.is_hidden);
+        const data = await productService.getProducts();
         setProducts(data);
         setFilteredProducts(data);
       } catch (error) {
@@ -37,7 +37,7 @@ const Products: React.FC = () => {
       setFilteredProducts(products);
     } else {
       setFilteredProducts(
-        products.filter(product => product.category === selectedCategory)
+        products.filter((product) => product.category === selectedCategory)
       );
     }
   }, [selectedCategory, products]);
@@ -45,7 +45,10 @@ const Products: React.FC = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[#0f0f0f] text-white flex items-center justify-center">
-        <p>Loading products...</p>
+        <div className="text-center">
+          <div className="animate-spin h-12 w-12 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p>Loading products...</p>
+        </div>
       </div>
     );
   }
@@ -57,9 +60,9 @@ const Products: React.FC = () => {
       <main className="max-w-6xl mx-auto px-4 py-12">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Our Products</h1>
+            <h1 className="text-3xl font-bold mb-2">Catálogo Completo</h1>
             <p className="text-gray-300">
-              Discover amazing hobby items and collectibles
+              Todos los productos disponibles (TCG, Juegos de mesa, Miniaturas, etc.)
             </p>
           </div>
 
@@ -80,7 +83,7 @@ const Products: React.FC = () => {
 
         <div className="mt-6">
           {filteredProducts.length === 0 ? (
-            <p className="text-gray-400 text-center">
+            <p className="text-gray-400 text-center py-16 text-lg">
               No products found in this category.
             </p>
           ) : (

@@ -62,11 +62,15 @@ const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) =
           const data = await response.json();
           console.log('TCG API Search Data:', data);
 
-          setSearchResults(data.data.map((card: any) => ({
-            id: card.id || card.uuid || card._id || `${card.name}-${Math.random()}`,
-            name: card.name,
-            image: card.image || card.images?.[0] || card.imageUrl || card.images?.small || '',
-          })));
+          // Normalizar datos
+          setSearchResults(
+            data.data.map((card: any) => ({
+              id: card.id || card.uuid || card._id || `${card.name}-${Math.random()}`,
+              name: card.name,
+              image: card.image || card.images?.[0] || card.imageUrl || card.images?.small || '',
+              description: card.text || card.description || card.flavorText || ''
+            }))
+          );
         } else {
           toast.error('Failed to search cards');
         }
@@ -75,7 +79,7 @@ const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) =
       } finally {
         setIsSearching(false);
       }
-    }, 3000);
+    }, 800);
 
     return () => clearTimeout(timeoutId);
   }, [searchQuery, selectedCategory, searchById]);
@@ -171,35 +175,44 @@ const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) =
             <label className="text-sm text-gray-700">Search by ID</label>
           </div>
 
-          {/* Search Results */}
+          {/* Search Results as grid */}
           {searchResults.length > 0 && (
-            <div className="mt-3 max-h-64 overflow-y-auto border border-gray-300 rounded-lg">
-              {searchResults.map((card) => (
-                <button
-                  key={card.id}
-                  type="button"
-                  onClick={() => setSelectedCard(card)}
-                  className={`w-full p-3 text-left hover:bg-gray-50 border-b border-gray-100 last:border-b-0 transition-colors ${
-                    selectedCard?.id === card.id ? 'bg-primary/10 border-l-4 border-l-primary' : ''
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    {card.image && (
-                      <img
-                        src={card.image}
-                        alt={card.name}
-                        className="w-12 h-12 object-cover rounded border border-gray-200"
-                      />
-                    )}
-                    <div className="flex-1">
-                      <p className="font-medium text-gray-900">{card.name}</p>
-                      {card.description && (
-                        <p className="text-sm text-gray-600 mt-0.5 truncate">{card.description}</p>
+            <div className="mt-3 max-h-96 overflow-y-auto">
+              <div className="grid gap-4 grid-cols-2 md:grid-cols-3">
+                {searchResults.map((card) => {
+                  const isSelected = selectedCard?.id === card.id;
+                  return (
+                    <button
+                      key={card.id}
+                      type="button"
+                      onClick={() => setSelectedCard(card)}
+                      className={`text-left rounded-lg border transition-all overflow-hidden ${
+                        isSelected
+                          ? 'border-primary bg-primary/10 shadow-md'
+                          : 'border-gray-200 bg-white hover:bg-gray-50'
+                      }`}
+                    >
+                      {card.image && (
+                        <img
+                          src={card.image}
+                          alt={card.name}
+                          className="w-full h-40 object-cover"
+                        />
                       )}
-                    </div>
-                  </div>
-                </button>
-              ))}
+                      <div className="p-2">
+                        <p className="text-sm font-semibold text-gray-900 line-clamp-2">
+                          {card.name}
+                        </p>
+                        {card.description && (
+                          <p className="text-xs text-gray-600 mt-1 line-clamp-2">
+                            {card.description}
+                          </p>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>
@@ -208,18 +221,18 @@ const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) =
         {selectedCard && (
           <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
             <p className="text-sm font-medium text-gray-700 mb-2">Selected Card:</p>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               {selectedCard.image && (
                 <img
                   src={selectedCard.image}
                   alt={selectedCard.name}
-                  className="w-16 h-16 object-cover rounded-lg border border-gray-300"
+                  className="w-20 h-28 object-cover rounded-lg border border-gray-300"
                 />
               )}
               <div>
                 <p className="font-semibold text-gray-900">{selectedCard.name}</p>
                 {selectedCard.description && (
-                  <p className="text-sm text-gray-600 mt-0.5">{selectedCard.description}</p>
+                  <p className="text-sm text-gray-600 mt-1">{selectedCard.description}</p>
                 )}
               </div>
             </div>
