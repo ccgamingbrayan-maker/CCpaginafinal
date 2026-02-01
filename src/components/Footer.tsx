@@ -1,49 +1,128 @@
 import React from 'react';
 import { Facebook, Instagram, Twitter } from 'lucide-react';
+import styled from 'styled-components';
 
+// Styled Components
+const FooterContainer = styled.footer`
+  background-color: #0f0f0f;
+  color: #D2D2D2;
+  padding: 3rem 1rem 1rem;
+  margin-top: 4rem;
+  font-family: 'Sora', sans-serif;
+`;
+
+const FooterContent = styled.div`
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 2rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+`;
+
+const FooterSection = styled.div`
+  h3 {
+    color: #ffffff;
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    margin-bottom: 0.5rem;
+  }
+
+  a {
+    color: #D2D2D2;
+    text-decoration: none;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #a71fd0;
+    }
+  }
+`;
+
+const SocialLinks = styled.div`
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+`;
+
+const SocialLink = styled.a`
+  color: #D2D2D2;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: rgba(167, 31, 208, 0.1);
+    color: #a71fd0;
+  }
+`;
+
+const Copyright = styled.div`
+  max-width: 1280px;
+  margin: 2rem auto 0;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+  color: #D2D2D2;
+  font-size: 0.875rem;
+`;
+
+// Component
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Capsule Corp</h3>
-            <p className="text-gray-300">
-              Your local destination for trading cards, board games, and collectibles.
-            </p>
-          </div>
-          
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2 text-gray-300">
-              <li><a href="/about" className="hover:text-white transition-colors">About Us</a></li>
-              <li><a href="/contact" className="hover:text-white transition-colors">Contact</a></li>
-              <li><a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a></li>
-              <li><a href="/terms" className="hover:text-white transition-colors">Terms of Service</a></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Follow Us</h3>
-            <div className="flex space-x-4">
-              <a href="#" className="text-gray-300 hover:text-white transition-colors" aria-label="Facebook">
-                <Facebook className="h-6 w-6" />
-              </a>
-              <a href="#" className="text-gray-300 hover:text-white transition-colors" aria-label="Instagram">
-                <Instagram className="h-6 w-6" />
-              </a>
-              <a href="#" className="text-gray-300 hover:text-white transition-colors" aria-label="Twitter">
-                <Twitter className="h-6 w-6" />
-              </a>
-            </div>
-          </div>
-        </div>
-        
-        <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-300">
-          <p>&copy; {new Date().getFullYear()} Capsule Corp. All rights reserved.</p>
-        </div>
-      </div>
-    </footer>
+    <FooterContainer>
+      <FooterContent>
+        <FooterSection>
+          <h3>About Us</h3>
+          <p>Your one-stop shop for all hobby and collectible needs.</p>
+        </FooterSection>
+
+        <FooterSection>
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/products">Products</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </FooterSection>
+
+        <FooterSection>
+          <h3>Follow Us</h3>
+          <SocialLinks>
+            <SocialLink href="#" aria-label="Facebook">
+              <Facebook size={20} />
+            </SocialLink>
+            <SocialLink href="#" aria-label="Instagram">
+              <Instagram size={20} />
+            </SocialLink>
+            <SocialLink href="#" aria-label="Twitter">
+              <Twitter size={20} />
+            </SocialLink>
+          </SocialLinks>
+        </FooterSection>
+      </FooterContent>
+
+      <Copyright>
+        © {new Date().getFullYear()} HobbyShop. All rights reserved.
+      </Copyright>
+    </FooterContainer>
   );
 };
 

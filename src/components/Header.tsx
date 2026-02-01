@@ -2,7 +2,130 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ShoppingCart, Menu, X } from 'lucide-react';
 import { cartService } from '../utils/cart';
+import styled from 'styled-components';
 
+// Styled Components
+const HeaderContainer = styled.header`
+  background-color: #2D2D2D;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+`;
+
+const Nav = styled.nav`
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const Logo = styled(Link)`
+  font-size: 1.5rem;
+  font-weight: bold;
+  background: linear-gradient(to right, #a71fd0, #7f00a5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-decoration: none;
+  font-family: 'Sora', sans-serif;
+`;
+
+const DesktopMenu = styled.div`
+  display: none;
+  gap: 2rem;
+  align-items: center;
+
+  @media (min-width: 768px) {
+    display: flex;
+  }
+`;
+
+const NavLink = styled(Link)<{ $isActive: boolean }>`
+  color: ${props => props.$isActive ? '#a71fd0' : '#ffffff'};
+  text-decoration: none;
+  font-weight: ${props => props.$isActive ? '600' : '400'};
+  transition: color 0.3s ease;
+  font-family: 'Sora', sans-serif;
+
+  &:hover {
+    color: #a71fd0;
+  }
+`;
+
+const CartButton = styled(Link)`
+  position: relative;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  color: #ffffff;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    background-color: rgba(167, 31, 208, 0.1);
+  }
+`;
+
+const CartBadge = styled.span`
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #a71fd0;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 0.125rem 0.375rem;
+  border-radius: 9999px;
+  min-width: 1.25rem;
+  text-align: center;
+`;
+
+const MobileMenuButton = styled.button`
+  display: flex;
+  padding: 0.5rem;
+  border: none;
+  background: transparent;
+  color: #ffffff;
+  cursor: pointer;
+  
+  @media (min-width: 768px) {
+    display: none;
+  }
+`;
+
+const MobileMenu = styled.div<{ $isOpen: boolean }>`
+  display: ${props => props.$isOpen ? 'flex' : 'none'};
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #0f0f0f;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+`;
+
+const MobileNavLink = styled(Link)<{ $isActive: boolean }>`
+  color: ${props => props.$isActive ? '#a71fd0' : '#ffffff'};
+  text-decoration: none;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  font-weight: ${props => props.$isActive ? '600' : '400'};
+  transition: all 0.3s ease;
+  font-family: 'Sora', sans-serif;
+
+  &:hover {
+    background-color: rgba(167, 31, 208, 0.1);
+    color: #a71fd0;
+  }
+`;
+
+// Component
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(cartService.getCart().length);
@@ -20,116 +143,44 @@ const Header = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="bg-white shadow-sm border-b">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <Link to="/" className="flex items-center space-x-2">
-            <img
-              src="https://static.wikia.nocookie.net/dragonball/images/a/a0/Logo_de_Capsule_Corp.png/revision/latest?cb=20220526210226&path-prefix=es"
-              alt="Capsule Corp"
-              className="h-8 w-8 object-contain"
-            />
-            <span className="text-xl font-bold text-primary">Capsule Corp</span>
-          </Link>
+    <HeaderContainer>
+      <Nav>
+        <Logo to="/">HobbyShop</Logo>
 
-          <nav className="hidden md:flex space-x-8">
-            <Link
-              to="/"
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActive('/') 
-                  ? 'text-primary bg-primary/10' 
-                  : 'text-gray-700 hover:text-primary hover:bg-gray-50'
-              }`}
-            >
-              Products
-            </Link>
-            <Link
-              to="/about"
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActive('/about') 
-                  ? 'text-primary bg-primary/10' 
-                  : 'text-gray-700 hover:text-primary hover:bg-gray-50'
-              }`}
-            >
-              About
-            </Link>
-            <Link
-              to="/contact"
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActive('/contact') 
-                  ? 'text-primary bg-primary/10' 
-                  : 'text-gray-700 hover:text-primary hover:bg-gray-50'
-              }`}
-            >
-              Contact
-            </Link>
-          </nav>
+        <DesktopMenu>
+          <NavLink to="/" $isActive={isActive('/')}>Home</NavLink>
+          <NavLink to="/products" $isActive={isActive('/products')}>Products</NavLink>
+          <NavLink to="/about" $isActive={isActive('/about')}>About</NavLink>
+          <NavLink to="/contact" $isActive={isActive('/contact')}>Contact</NavLink>
+          <CartButton to="/cart">
+            <ShoppingCart size={24} />
+            {cartCount > 0 && <CartBadge>{cartCount}</CartBadge>}
+          </CartButton>
+        </DesktopMenu>
 
-          <div className="flex items-center space-x-4">
-            <Link
-              to="/cart"
-              className="relative p-2 text-gray-700 hover:text-primary transition-colors"
-              aria-label="Shopping cart"
-            >
-              <ShoppingCart className="h-6 w-6" />
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
+        <MobileMenuButton onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </MobileMenuButton>
+      </Nav>
 
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2 text-gray-700 hover:text-primary transition-colors"
-              aria-label="Toggle menu"
-            >
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
-          </div>
-        </div>
-
-        {isMenuOpen && (
-          <div className="md:hidden py-4 border-t">
-            <nav className="flex flex-col space-y-2">
-              <Link
-                to="/"
-                onClick={() => setIsMenuOpen(false)}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive('/') 
-                    ? 'text-primary bg-primary/10' 
-                    : 'text-gray-700 hover:text-primary hover:bg-gray-50'
-                }`}
-              >
-                Products
-              </Link>
-              <Link
-                to="/about"
-                onClick={() => setIsMenuOpen(false)}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive('/about') 
-                    ? 'text-primary bg-primary/10' 
-                    : 'text-gray-700 hover:text-primary hover:bg-gray-50'
-                }`}
-              >
-                About
-              </Link>
-              <Link
-                to="/contact"
-                onClick={() => setIsMenuOpen(false)}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive('/contact') 
-                    ? 'text-primary bg-primary/10' 
-                    : 'text-gray-700 hover:text-primary hover:bg-gray-50'
-                }`}
-              >
-                Contact
-              </Link>
-            </nav>
-          </div>
-        )}
-      </div>
-    </header>
+      <MobileMenu $isOpen={isMenuOpen}>
+        <MobileNavLink to="/" $isActive={isActive('/')} onClick={() => setIsMenuOpen(false)}>
+          Home
+        </MobileNavLink>
+        <MobileNavLink to="/products" $isActive={isActive('/products')} onClick={() => setIsMenuOpen(false)}>
+          Products
+        </MobileNavLink>
+        <MobileNavLink to="/about" $isActive={isActive('/about')} onClick={() => setIsMenuOpen(false)}>
+          About
+        </MobileNavLink>
+        <MobileNavLink to="/contact" $isActive={isActive('/contact')} onClick={() => setIsMenuOpen(false)}>
+          Contact
+        </MobileNavLink>
+        <MobileNavLink to="/cart" $isActive={isActive('/cart')} onClick={() => setIsMenuOpen(false)}>
+          Cart ({cartCount})
+        </MobileNavLink>
+      </MobileMenu>
+    </HeaderContainer>
   );
 };
 
