@@ -146,12 +146,12 @@ const Header = () => {
         <Logo to="/">Capsule Corp</Logo>
 
         <DesktopMenu>
-          <NavLink to="/" $isActive={isActive('/')}>Home</NavLink>
-          <NavLink to="/products" $isActive={isActive('/products')}>Products</NavLink>
-          <NavLink to="/about" $isActive={isActive('/about')}>About</NavLink>
-          <NavLink to="/contact" $isActive={isActive('/contact')}>Contact</NavLink>
+          <NavLink to="/" $isActive={isActive('/')}>Inicio</NavLink>
+          <NavLink to="/products" $isActive={isActive('/products')}>Productos</NavLink>
+          <NavLink to="/about" $isActive={isActive('/about')}>Nosotros</NavLink>
+          <NavLink to="/contact" $isActive={isActive('/contact')}>Contacto</NavLink>
           <CartButton to="/cart">
-            <ShoppingCart size={24} />
+            Carrito
             {cartCount > 0 && <CartBadge>{cartCount}</CartBadge>}
           </CartButton>
         </DesktopMenu>
@@ -163,19 +163,19 @@ const Header = () => {
 
       <MobileMenu $isOpen={isMenuOpen}>
         <MobileNavLink to="/" $isActive={isActive('/')} onClick={() => setIsMenuOpen(false)}>
-          Home
+          Inicio
         </MobileNavLink>
         <MobileNavLink to="/products" $isActive={isActive('/products')} onClick={() => setIsMenuOpen(false)}>
-          Products
+          Productos
         </MobileNavLink>
         <MobileNavLink to="/about" $isActive={isActive('/about')} onClick={() => setIsMenuOpen(false)}>
-          About
+          Nosotros
         </MobileNavLink>
         <MobileNavLink to="/contact" $isActive={isActive('/contact')} onClick={() => setIsMenuOpen(false)}>
-          Contact
+          Contacto
         </MobileNavLink>
         <MobileNavLink to="/cart" $isActive={isActive('/cart')} onClick={() => setIsMenuOpen(false)}>
-          Cart ({cartCount})
+          Carrito ({cartCount})
         </MobileNavLink>
       </MobileMenu>
     </HeaderContainer>

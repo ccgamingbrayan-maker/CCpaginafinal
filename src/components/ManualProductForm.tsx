@@ -7,12 +7,12 @@ import { toast } from 'react-toastify';
 import type { NewProductInput } from '../utils/supabase';
 
 const productSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  desc: z.string().min(1, 'Description is required'),
-  price: z.number().min(0.01, 'Price must be greater than 0'),
-  category: z.string().min(1, 'Category is required'),
-  image: z.string().url('Must be a valid URL'),
-  stock_quantity: z.number().int().min(1, 'Stock must be at least 1'),
+  name: z.string().min(1, 'El nombre es requerido'),
+  desc: z.string().min(1, 'La descripción es requerida'),
+  price: z.number().min(0.01, 'El precio debe ser mayor a 0'),
+  category: z.string().min(1, 'La categoría es requerida'),
+  image: z.string().url('Debe ser una URL válida'),
+  stock_quantity: z.number().int().min(1, 'El stock debe ser al menos 1'),
 });
 
 type ProductFormData = z.infer<typeof productSchema>;
@@ -65,17 +65,17 @@ const ManualProductForm: React.FC<ManualProductFormProps> = ({
 
     try {
       await onSubmit(payload);
-      toast.success('Product added successfully!');
+      toast.success('¡Producto agregado exitosamente!');
     } catch (error) {
       console.error(error);
-      toast.error('Failed to add product');
+      toast.error('Error al agregar el producto');
     }
   };
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
       <h3 className="text-xl font-semibold text-gray-900 mb-6">
-        Add Product Manually
+        Agregar Producto Manualmente
       </h3>
 
       <form
@@ -88,14 +88,14 @@ const ManualProductForm: React.FC<ManualProductFormProps> = ({
             htmlFor="name"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
-            Product Name
+            Nombre del Producto
           </label>
           <input
             type="text"
             id="name"
             {...register('name')}
             className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-            placeholder="Enter product name"
+            placeholder="Ingresa el nombre del producto"
           />
           {errors.name && (
             <p className="text-red-600 text-sm mt-1.5">
@@ -109,14 +109,14 @@ const ManualProductForm: React.FC<ManualProductFormProps> = ({
             htmlFor="desc"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
-            Description
+            Descripción
           </label>
           <textarea
             id="desc"
             rows={3}
             {...register('desc')}
             className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-none"
-            placeholder="Enter product description"
+            placeholder="Ingresa la descripción del producto"
           />
           {errors.desc && (
             <p className="text-red-600 text-sm mt-1.5">
@@ -130,7 +130,7 @@ const ManualProductForm: React.FC<ManualProductFormProps> = ({
             htmlFor="price"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
-            Price ($)
+            Precio ($)
           </label>
           <input
             type="number"
@@ -152,7 +152,7 @@ const ManualProductForm: React.FC<ManualProductFormProps> = ({
             htmlFor="stock_quantity"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
-            Stock quantity
+            Cantidad en stock
           </label>
           <input
             type="number"
@@ -173,14 +173,14 @@ const ManualProductForm: React.FC<ManualProductFormProps> = ({
             htmlFor="category"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
-            Category
+            Categoría
           </label>
           <select
             id="category"
             {...register('category')}
             className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-white"
           >
-            <option value="">Select a category</option>
+            <option value="">Selecciona una categoría</option>
             {categories.map((category) => (
               <option key={category} value={category}>
                 {category}
@@ -199,14 +199,14 @@ const ManualProductForm: React.FC<ManualProductFormProps> = ({
             htmlFor="image"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
-            Image URL
+            URL de la Imagen
           </label>
           <input
             type="url"
             id="image"
             {...register('image')}
             className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-            placeholder="https://example.com/image.jpg"
+            placeholder="https://ejemplo.com/imagen.jpg"
           />
           {errors.image && (
             <p className="text-red-600 text-sm mt-1.5">
@@ -218,7 +218,7 @@ const ManualProductForm: React.FC<ManualProductFormProps> = ({
             <div className="mt-3">
               <img
                 src={imagePreview}
-                alt="Preview"
+                alt="Vista previa"
                 className="w-32 h-32 object-cover rounded-lg border border-gray-300 shadow-sm"
                 onError={() => setImagePreview('')}
               />
@@ -232,14 +232,14 @@ const ManualProductForm: React.FC<ManualProductFormProps> = ({
             disabled={isSubmitting}
             className="flex-1 bg-primary text-white py-2.5 px-6 rounded-lg hover:bg-primary/90 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? 'Adding...' : 'Add Product'}
+            {isSubmitting ? 'Agregando...' : 'Agregar Producto'}
           </button>
           <button
             type="button"
             onClick={onCancel}
             className="flex-1 bg-gray-200 text-gray-700 py-2.5 px-6 rounded-lg hover:bg-gray-300 transition-colors font-medium"
           >
-            Cancel
+            Cancelar
           </button>
         </div>
       </form>

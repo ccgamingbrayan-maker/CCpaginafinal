@@ -147,11 +147,11 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
     if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
       localStorage.setItem('isOwnerLoggedIn', 'true');
-      toast.success('Login successful!');
+      toast.success('¡Inicio de sesión exitoso!');
       onClose();
       navigate('/admin');
     } else {
-      toast.error('Invalid credentials');
+      toast.error('Credenciales inválidas');
     }
   };
 
@@ -161,7 +161,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
     <ModalOverlay onClick={onClose}>
       <ModalContainer onClick={(e) => e.stopPropagation()}>
         <ModalHeader>
-          <ModalTitle>Owner Login</ModalTitle>
+          <ModalTitle>Login de Propietario</ModalTitle>
           <CloseButton onClick={onClose}>
             <X size={24} />
           </CloseButton>
@@ -169,7 +169,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
         <Form onSubmit={handleSubmit}>
           <FormGroup>
-            <Label htmlFor="username">Username</Label>
+            <Label htmlFor="username">Usuario</Label>
             <StyledInput
               id="username"
               type="text"
@@ -180,7 +180,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
           </FormGroup>
 
           <FormGroup>
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">Contraseña</Label>
             <StyledInput
               id="password"
               type="password"
@@ -190,13 +190,13 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
             />
           </FormGroup>
 
-          <SubmitButton type="submit">Login</SubmitButton>
+          <SubmitButton type="submit">Iniciar Sesión</SubmitButton>
         </Form>
 
         <DemoCredentials>
-          <p>Demo credentials:</p>
-          <p>Username: admin</p>
-          <p>Password: hobbyshop123</p>
+          <p>Credenciales de demostración:</p>
+          <p>Usuario: admin</p>
+          <p>Contraseña: hobbyshop123</p>
         </DemoCredentials>
       </ModalContainer>
     </ModalOverlay>

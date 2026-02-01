@@ -1,58 +1,194 @@
 import React from 'react';
-import { ShoppingCart } from 'lucide-react';
 import type { Product } from '../types/product';
 import { cartService } from '../utils/cart';
 import { toast } from 'react-toastify';
+import styled from 'styled-components';
+import { Button, Text } from './styledcomponents'; 
 
-interface ProductCardProps {
-  product: Product;
-}
+const CardWrapper = styled.div`
+  width: 100%;
+  max-width: 340px;
+  height: 280px;
+  background: linear-gradient(145deg, #1F1F1F, #111111);
+  border-radius: 14px;
+  border: 1px solid rgba(167, 31, 208, 0.15);
+  overflow: visible;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.6);
+  transition: all 0.4s ease;
+  display: flex;
+  position: relative;
+  gap: 0;
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(167, 31, 208, 0.35);
+  }
+
+  @media (max-width: 700px) {
+    max-width: 100%;
+    height: auto;
+    flex-direction: column;
+  }
+`;
+
+const ImageArea = styled.div`
+  position: relative;
+  width: 190px;
+  height: 100%;
+  border-radius: 14px 0 0 14px;
+  overflow: hidden;
+  flex-shrink: 0;
+  z-index: 2;
+
+  ${CardWrapper}:hover & img {
+    transform: scale(1.06);
+  }
+
+  @media (max-width: 700px) {
+    width: 100%;
+    height: 170px;
+    border-radius: 14px 14px 0 0;
+  }
+`;
+
+const CardImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+`;
+
+const CategoryBox = styled.div`
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: linear-gradient(135deg, rgba(167, 31, 208, 0.95), rgba(255, 107, 157, 0.9));
+  backdrop-filter: blur(10px);
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  box-shadow: 0 4px 16px rgba(167, 31, 208, 0.4);
+`;
+
+const ContentBox = styled.div`
+  flex: 1;
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  background: linear-gradient(to bottom, rgba(31,31,31,0.9), #1F1F1F);
+
+  @media (max-width: 700px) {
+    padding: 20px;
+  }
+`;
+
+const TitleBox = styled.div`
+  margin-bottom: 16px;
+  flex-shrink: 0;
+`;
+
+const CardTitle = styled.h3`
+  font-family: 'Sora', sans-serif;
+  font-size: 16px;
+  font-weight: 900;
+  background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 10px 0;
+  line-height: 1.25;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-height: 45px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  @media (max-width: 700px) {
+    font-size: 15px;
+  }
+`;
+
+const CardDescription = styled(Text)`
+  color: #D1D5DB !important;
+  font-size: 13px !important;
+  line-height: 1.45;
+  max-height: 55px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+
+  @media (max-width: 700px) {
+    font-size: 12px !important;
+    max-height: 45px;
+    -webkit-line-clamp: 2;
+  }
+`;
+
+const PriceButtonBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 16px;
+`;
+
+const PriceBox = styled.div`
+  font-family: 'Sora', sans-serif;
+  font-size: 24px;
+  font-weight: 900;
+  background: linear-gradient(135deg, #a71fd0 0%, #ff6b9d 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin: 0;
+  width: 100%;
+  
+  @media (max-width: 700px) {
+    font-size: 22px;
+  }
+`;
+
+const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   const handleAddToCart = () => {
     cartService.addToCart(product);
-    toast.success(`${product.name} added to cart!`);
+    toast.success(`${product.name} agregado al carrito!`);
     window.dispatchEvent(new Event('cartUpdated'));
   };
 
   return (
-    <div className="group bg-[#2D2D2D] rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 font-sora">
-      <div className="relative overflow-hidden">
-        <img 
-          src={product.image_url} 
-          alt={product.name}
-          className="w-full h-[400px] object-cover group-hover:scale-105 transition-transform duration-500"
-          loading="lazy"
-        />
-        <span className="absolute top-4 right-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg z-10">
-          {product.category}
-        </span>
-      </div>
-
-      <div className="p-6 relative">
-        <h3 className="text-xl font-bold text-white mb-3 line-clamp-2 leading-tight">
-          {product.name}
-        </h3>
-
-        <p className="text-gray-300 text-sm mb-6 line-clamp-3 leading-relaxed">
-          {product.description}
-        </p>
-
-        <div className="flex items-center justify-between">
-          <span className="text-2xl font-black bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent drop-shadow-lg">
-            ${product.price.toFixed(2)}
-          </span>
-          
-          <button
-            onClick={handleAddToCart}
-            className="group/add bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 flex items-center gap-2 whitespace-nowrap"
-          >
-            <ShoppingCart size={20} className="group-hover/add:rotate-12 transition-transform duration-200" />
-            Add to Cart
-          </button>
-        </div>
-      </div>
-    </div>
+    <CardWrapper>
+      <ImageArea>
+        <CardImage src={product.image_url} alt={product.name} />
+        <CategoryBox>{product.category}</CategoryBox>
+      </ImageArea>
+      
+      <ContentBox>
+        <TitleBox>
+          <CardTitle>{product.name}</CardTitle>
+          <CardDescription variant="gray">{product.description}</CardDescription>
+        </TitleBox>
+        
+        <PriceButtonBox>
+          <PriceBox>${product.price.toFixed(2)}</PriceBox>
+          <Button variant="green" onClick={handleAddToCart} style={{ fontSize: '12px', padding: '8px 20px', width: '100%' }}>
+            Comprar
+          </Button>
+        </PriceButtonBox>
+      </ContentBox>
+    </CardWrapper>
   );
 };
 

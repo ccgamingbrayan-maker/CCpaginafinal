@@ -46,7 +46,7 @@ const Products: React.FC = () => {
       <div className="min-h-screen bg-[#0f0f0f] text-white flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin h-12 w-12 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p>Loading products...</p>
+          <p>Cargando productos...</p>
         </div>
       </div>
     );
@@ -56,42 +56,54 @@ const Products: React.FC = () => {
     <div className="min-h-screen bg-[#0f0f0f] text-white">
       <Header />
 
-      <main className="max-w-6xl mx-auto px-4 py-12">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Catálogo Completo</h1>
-            <p className="text-gray-300">
+      <main className="max-w-[1400px] mx-auto px-6 py-16">
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-16 gap-8">
+          <div className="flex-1">
+            <h1 className="text-4xl font-bold mb-4">Catálogo Completo</h1>
+            <p className="text-gray-300 text-lg max-w-2xl">
               Todos los productos disponibles (TCG, Juegos de mesa, Miniaturas, etc.)
             </p>
           </div>
 
           <button
             onClick={() => setIsLoginModalOpen(true)}
-            className="flex items-center space-x-2 text-gray-500 hover:text-primary transition-colors"
-            aria-label="Owner login"
+            className="flex items-center space-x-2 text-gray-500 hover:text-primary transition-colors self-start lg:self-center"
+            aria-label="Login de propietario"
           >
             <Key className="h-5 w-5" />
-            <span>Owner</span>
+            <span>Propietario</span>
           </button>
         </div>
 
-        <ProductFilters
-          selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
-        />
+        <div className="flex flex-col lg:flex-row gap-12 products-custom-grid">
+          <div className="w-full lg:w-64 lg:flex-shrink-0 lg:sticky lg:top-28 self-start lg:min-h-[500px]">
+            <ProductFilters
+              selectedCategory={selectedCategory}
+              onCategoryChange={setSelectedCategory}
+            />
+          </div>
 
-        <div className="mt-6">
-          {filteredProducts.length === 0 ? (
-            <p className="text-gray-400 text-center py-16 text-lg">
-              No products found in this category.
-            </p>
-          ) : (
-            <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-              {filteredProducts.map((product) => (
-                <ProductCard key={product.uuid} product={product} />
-              ))}
-            </div>
-          )}
+          <div className="flex-1 min-h-[600px]">
+            {filteredProducts.length === 0 ? (
+              <div className="text-center py-24">
+                <div className="w-24 h-24 bg-gray-800 rounded-2xl flex items-center justify-center mx-auto mb-8">
+                  <span className="text-3xl">🛒</span>
+                </div>
+                <h2 className="text-2xl font-bold text-gray-300 mb-4">
+                  Sin productos
+                </h2>
+                <p className="text-gray-400 text-lg max-w-md mx-auto">
+                  No hay productos disponibles en esta categoría.
+                </p>
+              </div>
+            ) : (
+              <div className="grid gap-12 grid grid-cols-1 md:grid-cols-2 custom-cols-3">
+                {filteredProducts.map((product) => (
+                  <ProductCard key={product.uuid} product={product} />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </main>
 

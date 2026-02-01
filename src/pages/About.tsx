@@ -35,19 +35,19 @@ export default function About() {
       <main style={MainContent}>
         <section style={Section}>
           <Tittle variant="white" style={LargeTitle}>
-            About Capsule Corp
+            Sobre Capsule Corp
           </Tittle>
           <Text variant="gray" style={Subtitle}>
-            Your local destination for all things hobby-related
+            Tu destino local para todo lo relacionado con hobbies
           </Text>
         </section>
         
         <Container variant="big">
           <Tittle variant="purple">
-            Coming Soon
+            Próximamente
           </Tittle>
           <Text variant="white" style={{ marginBottom: '1rem' }}>
-            Use Meku to generate content for this page
+            Usa David para generar contenido para esta página
           </Text>
         </Container>
       </main>

@@ -46,13 +46,13 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
 }) => {
   return (
     <FiltersContainer>
-      <FiltersTitle>Filter by Category</FiltersTitle>
+      <FiltersTitle>Filtrar por categoría</FiltersTitle>
       
       <FilterButton
         $isActive={selectedCategory === ''}
         onClick={() => onCategoryChange('')}
       >
-        All Categories
+        Todas las categorías
       </FilterButton>
 
       {categories.map((category) => (

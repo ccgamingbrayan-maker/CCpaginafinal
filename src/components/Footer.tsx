@@ -2,7 +2,6 @@ import React from 'react';
 import { Facebook, Instagram, Twitter } from 'lucide-react';
 import styled from 'styled-components';
 
-// Styled Components
 const FooterContainer = styled.footer`
   background-color: #0f0f0f;
   color: #D2D2D2;
@@ -83,28 +82,27 @@ const Copyright = styled.div`
   font-size: 0.875rem;
 `;
 
-// Component
 const Footer = () => {
   return (
     <FooterContainer>
       <FooterContent>
         <FooterSection>
-          <h3>About Us</h3>
-          <p>Your one-stop shop for all hobby and collectible needs.</p>
+          <h3>Nosotros</h3>
+          <p>Tu tienda especializada en cartas coleccionables y hobbies.</p>
         </FooterSection>
 
         <FooterSection>
-          <h3>Quick Links</h3>
+          <h3>Enlaces Rápidos</h3>
           <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/products">Products</a></li>
-            <li><a href="/about">About</a></li>
-            <li><a href="/contact">Contact</a></li>
+            <li><a href="/">Inicio</a></li>
+            <li><a href="/products">Productos</a></li>
+            <li><a href="/about">Nosotros</a></li>
+            <li><a href="/contact">Contacto</a></li>
           </ul>
         </FooterSection>
 
         <FooterSection>
-          <h3>Follow Us</h3>
+          <h3>Síguenos</h3>
           <SocialLinks>
             <SocialLink href="#" aria-label="Facebook">
               <Facebook size={20} />
@@ -120,7 +118,7 @@ const Footer = () => {
       </FooterContent>
 
       <Copyright>
-        © {new Date().getFullYear()} Capsule Corp. All rights reserved.
+        © {new Date().getFullYear()} Capsule Corp. Todos los derechos reservados.
       </Copyright>
     </FooterContainer>
   );

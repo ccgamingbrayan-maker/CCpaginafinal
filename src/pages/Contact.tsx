@@ -35,19 +35,19 @@ export default function Contact() {
       <main style={MainContent}>
         <section style={Section}>
           <Tittle variant="white" style={LargeTitle}>
-            Contact Us
+            Contáctanos
           </Tittle>
           <Text variant="gray" style={Subtitle}>
-            Get in touch with us
+            Ponte en contacto con nosotros
           </Text>
         </section>
         
         <Container variant="big">
           <Tittle variant="purple">
-            Coming Soon
+            Próximamente
           </Tittle>
           <Text variant="white" style={{ marginBottom: '1rem' }}>
-            Use Meku to generate content for this page
+            Usa DaVID para generar contenido para esta página
           </Text>
         </Container>
       </main>
