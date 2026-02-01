@@ -1,14 +1,17 @@
+// src/components/TCGProductForm.tsx
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Search } from 'lucide-react';
+import { categories } from '../data/categories';  // ✅ Categorías normales
 import { tcgApiCategories } from '../data/categories';
 import { toast } from 'react-toastify';
 
 const tcgProductSchema = z.object({
   price: z.number().min(0.01, 'Price must be greater than 0'),
-  desc: z.string().optional()
+  desc: z.string().optional(),
+  category: z.string().min(1, 'Category is required'),  // ✅ Nueva validación
 });
 
 type TCGProductFormData = z.infer<typeof tcgProductSchema>;
@@ -19,7 +22,8 @@ interface TCGProductFormProps {
 }
 
 const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) => {
-  const [selectedCategory, setSelectedCategory] = useState(tcgApiCategories[0]);
+  const [selectedTCGCategory, setSelectedTCGCategory] = useState(tcgApiCategories[0]);
+  const [selectedCategory, setSelectedCategory] = useState('Trading Cards');  // ✅ Default Trading Cards
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [selectedCard, setSelectedCard] = useState<any>(null);
@@ -31,25 +35,27 @@ const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) =
     handleSubmit,
     formState: { errors, isSubmitting }
   } = useForm<TCGProductFormData>({
-    resolver: zodResolver(tcgProductSchema)
+    resolver: zodResolver(tcgProductSchema),
+    defaultValues: {
+      category: 'Trading Cards',  // ✅ Default
+    }
   });
 
-  // Debounced search effect
+  // Debounced search
   useEffect(() => {
     if (!searchQuery.trim()) {
       setSearchResults([]);
       return;
     }
 
-    // If selected category doesn't provide an endpoint (coming soon), skip search
-    if (!selectedCategory || !selectedCategory.endpoint) {
+    if (!selectedTCGCategory || !selectedTCGCategory.endpoint) {
       setSearchResults([]);
       return;
     }
 
     const timeoutId = setTimeout(async () => {
       setIsSearching(true);
-      const finalEndpoint = `${selectedCategory.endpoint}?${searchById ? 'id' : 'name'}=${encodeURIComponent(searchQuery)}`;
+      const finalEndpoint = `${selectedTCGCategory.endpoint}?${searchById ? 'id' : 'name'}=${encodeURIComponent(searchQuery)}`;
 
       try {
         const response = await fetch(finalEndpoint, {
@@ -60,9 +66,6 @@ const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) =
 
         if (response.ok) {
           const data = await response.json();
-          console.log('TCG API Search Data:', data);
-
-          // Normalizar datos
           setSearchResults(
             data.data.map((card: any) => ({
               id: card.id || card.uuid || card._id || `${card.name}-${Math.random()}`,
@@ -82,7 +85,7 @@ const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) =
     }, 800);
 
     return () => clearTimeout(timeoutId);
-  }, [searchQuery, selectedCategory, searchById]);
+  }, [searchQuery, selectedTCGCategory, searchById]);
 
   const handleFormSubmit = async (data: TCGProductFormData) => {
     if (!selectedCard) {
@@ -96,7 +99,7 @@ const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) =
         image_url: selectedCard.image,
         price: data.price,
         description: data.desc || selectedCard.description || '',
-        category: selectedCategory.name
+        category: data.category,  // ✅ Usa la categoría seleccionada
       });
       toast.success('Product added successfully!');
     } catch (error) {
@@ -109,17 +112,17 @@ const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) =
       <h3 className="text-xl font-semibold text-gray-900 mb-6">Add Product from TCG API</h3>
 
       <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-5">
-        {/* TCG Category */}
+        {/* TCG Category Selector */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            TCG Category
+            TCG Source
           </label>
           <select
-            value={selectedCategory.name}
+            value={selectedTCGCategory.name}
             onChange={(e) => {
               const category = tcgApiCategories.find(cat => cat.name === e.target.value);
               if (category) {
-                setSelectedCategory(category);
+                setSelectedTCGCategory(category);
                 setSearchResults([]);
                 setSelectedCard(null);
                 setSearchQuery('');
@@ -133,10 +136,31 @@ const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) =
               </option>
             ))}
           </select>
-          {selectedCategory && !selectedCategory.endpoint && (
+          {selectedTCGCategory && !selectedTCGCategory.endpoint && (
             <p className="text-amber-600 text-sm mt-1.5 bg-amber-50 p-2 rounded">
-              This category is coming soon and cannot be searched yet.
+              This category is coming soon.
             </p>
+          )}
+        </div>
+
+        {/* Product Category Selector ✅ NUEVO */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Store Category
+          </label>
+          <select
+            {...register('category')}
+            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-white"
+          >
+            <option value="">Select store category</option>
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+          {errors.category && (
+            <p className="text-red-600 text-sm mt-1.5">{errors.category.message}</p>
           )}
         </div>
 
@@ -153,7 +177,7 @@ const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) =
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
               placeholder="Type to search cards..."
-              disabled={!selectedCategory || !selectedCategory.endpoint}
+              disabled={!selectedTCGCategory || !selectedTCGCategory.endpoint}
             />
             {isSearching && (
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -167,18 +191,16 @@ const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) =
             <input
               type="checkbox"
               checked={searchById}
-              onChange={() => {
-                setSearchById(p => !p);
-              }}
+              onChange={() => setSearchById(p => !p)}
               className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-2 focus:ring-primary"
             />
             <label className="text-sm text-gray-700">Search by ID</label>
           </div>
 
-          {/* Search Results as grid */}
+          {/* Search Results */}
           {searchResults.length > 0 && (
             <div className="mt-3 max-h-96 overflow-y-auto">
-              <div className="grid gap-4 grid-cols-2 md:grid-cols-3">
+              <div className="grid gap-3 grid-cols-2 md:grid-cols-3">
                 {searchResults.map((card) => {
                   const isSelected = selectedCard?.id === card.id;
                   return (
@@ -186,29 +208,29 @@ const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) =
                       key={card.id}
                       type="button"
                       onClick={() => setSelectedCard(card)}
-                      className={`text-left rounded-lg border transition-all overflow-hidden ${
+                      className={`group p-3 rounded-lg border transition-all overflow-hidden hover:shadow-md ${
                         isSelected
-                          ? 'border-primary bg-primary/10 shadow-md'
-                          : 'border-gray-200 bg-white hover:bg-gray-50'
+                          ? 'border-primary bg-primary/10 ring-2 ring-primary/20 shadow-md'
+                          : 'border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300'
                       }`}
                     >
                       {card.image && (
                         <img
                           src={card.image}
                           alt={card.name}
-                          className="w-full h-40 object-cover"
+                          className="w-full h-32 object-cover rounded-lg mb-2 group-hover:scale-105 transition-transform duration-200"
                         />
                       )}
-                      <div className="p-2">
-                        <p className="text-sm font-semibold text-gray-900 line-clamp-2">
-                          {card.name}
+                      <p className={`text-sm font-semibold line-clamp-2 ${
+                        isSelected ? 'text-primary' : 'text-gray-900'
+                      }`}>
+                        {card.name}
+                      </p>
+                      {card.description && (
+                        <p className="text-xs text-gray-600 mt-1 line-clamp-1">
+                          {card.description}
                         </p>
-                        {card.description && (
-                          <p className="text-xs text-gray-600 mt-1 line-clamp-2">
-                            {card.description}
-                          </p>
-                        )}
-                      </div>
+                      )}
                     </button>
                   );
                 })}
@@ -219,20 +241,27 @@ const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) =
 
         {/* Selected Card Preview */}
         {selectedCard && (
-          <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-            <p className="text-sm font-medium text-gray-700 mb-2">Selected Card:</p>
-            <div className="flex items-center gap-4">
+          <div className="bg-gradient-to-r from-gray-50 to-blue-50 p-4 rounded-xl border-2 border-blue-100 shadow-sm">
+            <p className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
+              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              Selected: {selectedCard.name}
+            </p>
+            <div className="flex items-start gap-4">
               {selectedCard.image && (
                 <img
                   src={selectedCard.image}
                   alt={selectedCard.name}
-                  className="w-20 h-28 object-cover rounded-lg border border-gray-300"
+                  className="w-20 h-28 object-cover rounded-lg border-2 border-gray-200 shadow-sm flex-shrink-0"
                 />
               )}
-              <div>
-                <p className="font-semibold text-gray-900">{selectedCard.name}</p>
+              <div className="flex-1 min-w-0">
+                <p className="font-bold text-sm text-gray-900 line-clamp-1 mb-1">
+                  {selectedCard.name}
+                </p>
                 {selectedCard.description && (
-                  <p className="text-sm text-gray-600 mt-1">{selectedCard.description}</p>
+                  <p className="text-xs text-gray-600 line-clamp-2 leading-tight">
+                    {selectedCard.description}
+                  </p>
                 )}
               </div>
             </div>
@@ -249,7 +278,7 @@ const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) =
             step="0.01"
             id="price"
             {...register('price', { valueAsNumber: true })}
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all shadow-sm"
             placeholder="0.00"
           />
           {errors.price && (
@@ -266,24 +295,31 @@ const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) =
             id="desc"
             rows={3}
             {...register('desc')}
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-none"
+            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-none shadow-sm"
             placeholder="Add extra details about this product..."
           />
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-3 pt-4 border-t border-gray-200">
+        <div className="flex gap-3 pt-6 border-t border-gray-200">
           <button
             type="submit"
-            disabled={isSubmitting}
-            className="flex-1 bg-primary text-white py-2.5 px-6 rounded-lg hover:bg-primary/90 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={isSubmitting || !selectedCard}
+            className="flex-1 bg-gradient-to-r from-primary to-purple-600 text-white py-3 px-6 rounded-xl hover:from-primary/90 hover:to-purple-700 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none flex items-center justify-center gap-2"
           >
-            {isSubmitting ? 'Adding...' : 'Add Product'}
+            {isSubmitting ? (
+              <>
+                <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
+                Adding...
+              </>
+            ) : (
+              'Add Product'
+            )}
           </button>
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 bg-gray-200 text-gray-700 py-2.5 px-6 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+            className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 py-3 px-6 rounded-xl transition-all duration-200 font-semibold shadow-sm hover:shadow-md hover:-translate-y-0.5"
           >
             Cancel
           </button>
