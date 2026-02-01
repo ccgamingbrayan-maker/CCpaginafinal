@@ -103,7 +103,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   return (
     <Card>
-      <CardImage src={product.image} alt={product.name} />
+      <CardImage src={product.image_url} alt={product.name} />
       <CardContent>
         <CategoryBadge>{product.category}</CategoryBadge>
         <ProductTitle>{product.name}</ProductTitle>

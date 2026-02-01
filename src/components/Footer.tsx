@@ -120,7 +120,7 @@ const Footer = () => {
       </FooterContent>
 
       <Copyright>
-        © {new Date().getFullYear()} HobbyShop. All rights reserved.
+        © {new Date().getFullYear()} Capsule Corp. All rights reserved.
       </Copyright>
     </FooterContainer>
   );

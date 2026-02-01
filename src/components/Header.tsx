@@ -133,7 +133,7 @@ const Header = () => {
 
   React.useEffect(() => {
     const updateCartCount = () => {
-      setCartCount(cartService.getCart().reduce((total, item) => total + item.quantity, 0));
+      setCartCount(cartService.getCart().reduce((total, item) => total + item.stock_quantity, 0));
     };
 
     window.addEventListener('cartUpdated', updateCartCount);
@@ -145,7 +145,7 @@ const Header = () => {
   return (
     <HeaderContainer>
       <Nav>
-        <Logo to="/">HobbyShop</Logo>
+        <Logo to="/">Capsule Corp</Logo>
 
         <DesktopMenu>
           <NavLink to="/" $isActive={isActive('/')}>Home</NavLink>
