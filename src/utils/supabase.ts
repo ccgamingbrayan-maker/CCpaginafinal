@@ -1,9 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Product } from '../types/product';
 
-export const SUPABASE_URL = 'https://ihhevhrrvmofklorfxfc.supabase.co';
+export const SUPABASE_URL = 'https://bmgqbmiivsbmjzygrcqu.supabase.co';
 export const SUPABASE_ANON_KEY =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloaGV2aHJydm1vZmtsb3JmeGZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkwMzIzMDQsImV4cCI6MjA4NDYwODMwNH0.2aBMqZ1zDgRbmOXQxtOZWYXfBfRQ6UYExJlJYWz8zj4';
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJtZ3FibWlpdnNibWp6eWdyY3F1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwMDEzOTIsImV4cCI6MjA4NTU3NzM5Mn0.kNBhLb_ypPvFJzk4vsMEGI4izubgSA0sVUCrnA8HrI4';
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -68,17 +68,3 @@ export const productService = {
   },
 };
 
-export const mockProducts: Product[] = [
-  {
-    uuid: '1',
-    name: 'Charizard Card',
-    image_url:
-      'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=400',
-    description: 'Rare holographic Charizard trading card',
-    price: 299.99,
-    category: 'Trading Cards',
-    is_hidden: false,
-    stock_quantity: 3,
-    created_at: '2023-10-01T12:00:00Z',
-  },
-];

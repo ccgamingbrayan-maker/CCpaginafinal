@@ -140,7 +140,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
 
   const ADMIN_USERNAME = 'admin';
-  const ADMIN_PASSWORD = 'hobbyshop123';
+  const ADMIN_PASSWORD = 'Arecash123.';
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -192,12 +192,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
           <SubmitButton type="submit">Iniciar Sesión</SubmitButton>
         </Form>
-
-        <DemoCredentials>
-          <p>Credenciales de demostración:</p>
-          <p>Usuario: admin</p>
-          <p>Contraseña: hobbyshop123</p>
-        </DemoCredentials>
       </ModalContainer>
     </ModalOverlay>
   );

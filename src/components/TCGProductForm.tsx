@@ -58,7 +58,7 @@ const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) =
       try {
         const response = await fetch(finalEndpoint, {
           headers: {
-            'x-api-key': '79ad473ec4732427d64f7090dce2ced8e387d84850af8ba6c2544c4d369414c1'
+            'x-api-key': '5ee0cf9c56cbe6dc3ee06d1bacb899d872b9a7858fe48df118743fce993267f5'
           }
         });
 
