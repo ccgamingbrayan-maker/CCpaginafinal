@@ -4,6 +4,8 @@ import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
 import type { Product } from '../types/product';
 import { productService } from '../utils/supabase';
+import { Link } from 'react-router-dom';
+
 
 const Landing: React.FC = () => {
   const [latestProducts, setLatestProducts] = useState<Product[]>([]);
@@ -204,12 +206,13 @@ const Landing: React.FC = () => {
             <p className="text-2xl text-gray-300 mb-12 max-w-lg leading-relaxed">
               Mira las últimas cartas que han salido en la tienda.
             </p>
-            <a 
-              href="/Products"
-              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold px-10 py-5 rounded-2xl text-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 inline-flex items-center gap-3"
-            >
-              Catálogo Completo →
-            </a>
+            <Link
+  to="/products"
+  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold px-10 py-5 rounded-2xl text-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 inline-flex items-center gap-3"
+>
+  Catálogo Completo →
+</Link>
+
           </div>
 
           <div className="card-container">
