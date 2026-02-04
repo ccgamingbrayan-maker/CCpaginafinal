@@ -22,7 +22,7 @@ interface TCGProductFormProps {
 
 const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) => {
   const [selectedTCGCategory, setSelectedTCGCategory] = useState(tcgApiCategories[0]);
-  const [selectedCategory, setSelectedCategory] = useState('Trading Cards');  
+  const [selectedCategory, setSelectedCategory] = useState('Singles');  
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [selectedCard, setSelectedCard] = useState<any>(null);
@@ -36,7 +36,7 @@ const TCGProductForm: React.FC<TCGProductFormProps> = ({ onSubmit, onCancel }) =
   } = useForm<TCGProductFormData>({
     resolver: zodResolver(tcgProductSchema),
     defaultValues: {
-      category: 'Trading Cards',  
+      category: 'Singles',  
     }
   });
 

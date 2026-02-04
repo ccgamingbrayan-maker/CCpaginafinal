@@ -4,7 +4,10 @@ export const categories = [
   'Miniatures',
   'Dice & Accessories',
   'Card Sleeves',
-  'Collectibles'
+  'Collectibles',
+  'Singles',
+  'Custom Cards',
+  'Playmats',
 ];
 
 export const tcgApiCategories = [

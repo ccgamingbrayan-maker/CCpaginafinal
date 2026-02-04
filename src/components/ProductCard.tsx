@@ -3,12 +3,12 @@ import type { Product } from '../types/product';
 import { cartService } from '../utils/cart';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
-import { Button, Text } from './styledcomponents'; 
+import { Button, Text } from './styledcomponents';
 
 const CardWrapper = styled.div`
   width: 100%;
-  max-width: 340px;
-  height: 280px;
+  max-width: 520px;
+  height: 240px;
   background: linear-gradient(145deg, #1F1F1F, #111111);
   border-radius: 14px;
   border: 1px solid rgba(167, 31, 208, 0.15);
@@ -16,6 +16,7 @@ const CardWrapper = styled.div`
   box-shadow: 0 6px 24px rgba(0,0,0,0.6);
   transition: all 0.4s ease;
   display: flex;
+  flex-direction: row;
   position: relative;
   gap: 0;
 
@@ -33,15 +34,25 @@ const CardWrapper = styled.div`
 
 const ImageArea = styled.div`
   position: relative;
-  width: 190px;
+  width: 180px;
   height: 100%;
   border-radius: 14px 0 0 14px;
   overflow: hidden;
   flex-shrink: 0;
   z-index: 2;
 
-  ${CardWrapper}:hover & img {
-    transform: scale(1.06);
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('https://i.pinimg.com/736x/ff/90/cd/ff90cdcaf64d339764f2458da44d7caa.jpg');
+    background-size: cover;
+    background-position: center;
+    filter: blur(4px) brightness(0.5);
+    z-index: 0;
   }
 
   @media (max-width: 700px) {
@@ -52,11 +63,20 @@ const ImageArea = styled.div`
 `;
 
 const CardImage = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
   display: block;
   transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+
+  ${CardWrapper}:hover & {
+    transform: translate(-50%, -50%) scale(1.06);
+  }
 `;
 
 const CategoryBox = styled.div`
@@ -73,6 +93,7 @@ const CategoryBox = styled.div`
   text-transform: uppercase;
   letter-spacing: 0.3px;
   box-shadow: 0 4px 16px rgba(167, 31, 208, 0.4);
+  z-index: 2;
 `;
 
 const ContentBox = styled.div`
@@ -81,8 +102,8 @@ const ContentBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  overflow: hidden;
   background: linear-gradient(to bottom, rgba(31,31,31,0.9), #1F1F1F);
+  overflow: hidden;
 
   @media (max-width: 700px) {
     padding: 20px;
@@ -117,9 +138,9 @@ const CardTitle = styled.h3`
   }
 `;
 
-const CardDescription = styled(Text)`
-  color: #D1D5DB !important;
-  font-size: 13px !important;
+const CardDescription = styled.p`
+  color: #D1D5DB;
+  font-size: 13px;
   line-height: 1.45;
   max-height: 55px;
   overflow: hidden;
@@ -129,7 +150,7 @@ const CardDescription = styled(Text)`
   word-break: break-word;
 
   @media (max-width: 700px) {
-    font-size: 12px !important;
+    font-size: 12px;
     max-height: 45px;
     -webkit-line-clamp: 2;
   }
@@ -146,7 +167,7 @@ const PriceButtonBox = styled.div`
 
 const PriceBox = styled.div`
   font-family: 'Sora', sans-serif;
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 900;
   background: linear-gradient(135deg, #a71fd0 0%, #ff6b9d 100%);
   -webkit-background-clip: text;
@@ -157,16 +178,30 @@ const PriceBox = styled.div`
   width: 100%;
   
   @media (max-width: 700px) {
-    font-size: 22px;
+    font-size: 20px;
   }
+`;
+
+const BuyButton = styled(Button)`
+  font-size: 12px;
+  padding: 8px 20px;
+  width: 100%;
 `;
 
 const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   const handleAddToCart = () => {
     cartService.addToCart(product);
-    toast.success(`${product.name} agregado al carrito!`);
+    toast.success(`¡${product.name} agregado al carrito!`);
     window.dispatchEvent(new Event('cartUpdated'));
   };
+
+  // Formatear precio a pesos colombianos
+  const formattedPrice = new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(product.price);
 
   return (
     <CardWrapper>
@@ -178,14 +213,14 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
       <ContentBox>
         <TitleBox>
           <CardTitle>{product.name}</CardTitle>
-          <CardDescription variant="gray">{product.description}</CardDescription>
+          <CardDescription>{product.description}</CardDescription>
         </TitleBox>
         
         <PriceButtonBox>
-          <PriceBox>${product.price.toFixed(2)}</PriceBox>
-          <Button variant="green" onClick={handleAddToCart} style={{ fontSize: '12px', padding: '8px 20px', width: '100%' }}>
+          <PriceBox>{formattedPrice}</PriceBox>
+          <BuyButton variant="green" onClick={handleAddToCart}>
             Comprar
-          </Button>
+          </BuyButton>
         </PriceButtonBox>
       </ContentBox>
     </CardWrapper>
